@@ -31,7 +31,7 @@ void svcHttpStopInstallHandler(HttpRequest* request, HttpResponse* response)
   sceBgftServiceDownloadStopTask(taskId);
   
   char content[256] = { 0 };
-  snprintf(content, sizeof(content), "{\"taskId\":\"%d\"}", taskId);
+  snprintf(content, sizeof(content), "{\"taskId\": %d}", taskId);
   httpResponsePrintContent(response, content);
 
   printf_debug("Stopped download with task id %d\n", taskId);

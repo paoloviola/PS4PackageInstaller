@@ -31,7 +31,7 @@ void svcHttpPauseInstallHandler(HttpRequest* request, HttpResponse* response)
   sceBgftServiceDownloadPauseTask(taskId);
   
   char content[256] = { 0 };
-  snprintf(content, sizeof(content), "{\"taskId\":\"%d\"}", taskId);
+  snprintf(content, sizeof(content), "{\"taskId\": %d}", taskId);
   httpResponsePrintContent(response, content);
 
   printf_debug("Paused download with task id %d\n", taskId);
