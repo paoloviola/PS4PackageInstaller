@@ -1,0 +1,43 @@
+name: Build & Publish Payload
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Build Payload
+      run: make
+      
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: "Release v${{ github.run_number }}"
+        body: "Automated release for build ${{ github.run_number }}"
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+
+    - name: Upload Payload
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./PS4PackageInstaller.bin
+        asset_name: PS4PackageInstaller-v${{ github.run_number }}.bin
+        asset_content_type: application/octet-stream
