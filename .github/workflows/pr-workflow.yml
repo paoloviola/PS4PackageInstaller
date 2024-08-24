@@ -13,5 +13,5 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Install dependencies
+    - name: Build Payload
       run: make
