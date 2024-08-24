@@ -2,7 +2,7 @@ name: Build & Publish Payload
 
 on:
   push:
-    branches: [ "pipelining" ]
+    branches: [ "main" ]
 
 permissions:
   contents: write
