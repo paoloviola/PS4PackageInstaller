@@ -23,7 +23,7 @@ HttpHandlerDesc* svcHttpHandlersAlloc(int* count)
   *count = 6;
   HttpHandlerDesc* handlers = (HttpHandlerDesc*)malloc(sizeof(HttpHandlerDesc) * (*count));
 
-  svcHttpHandlerInsert(handlers, 0, "GET", "/", &svcHttpStatusHandler, NULL);
+  svcHttpHandlerInsert(handlers, 0, "GET", "/api/health", &svcHttpStatusHandler, NULL);
   svcHttpHandlerInsert(handlers, 1, "POST", "/api/start_install", &svcHttpStartInstallHandler, NULL);
   svcHttpHandlerInsert(handlers, 2, "POST", "/api/pause_install", &svcHttpPauseInstallHandler, NULL);
   svcHttpHandlerInsert(handlers, 3, "POST", "/api/resume_install", &svcHttpResumeInstallHandler, NULL);

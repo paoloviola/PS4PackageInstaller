@@ -79,6 +79,8 @@ void httpServerSendResponse(int socket, HttpResponse* response)
   sceNetSend(socket, (char*)response->code, strlen(response->code), 0);
   sceNetSend(socket, (char*)"\r\n", 2, 0);
 
+  httpAttributeSet(&response->attributeList, "Access-Control-Allow-Origin", "*");
+
   for (int i = 0; i < response->attributeList.count; i++)
   {
     HttpAttribute entry = response->attributeList.entries[i];

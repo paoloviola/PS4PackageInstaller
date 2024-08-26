@@ -4,5 +4,5 @@
 void svcHttpStatusHandler(HttpRequest* request, HttpResponse* response)
 {
   UNUSED(request);
-  httpResponseSetCode(response, "200 OK");
+  httpResponsePrintContent(response, "{\"health\": \"OK\"}");
 }
