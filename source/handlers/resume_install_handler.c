@@ -21,7 +21,7 @@ void svcHttpResumeInstallHandler(HttpRequest* request, HttpResponse* response)
     return;
   }
 
-  SceBgftTaskId taskId = getRequestPropertyInt(root, "taskId", response);
+  SceBgftTaskId taskId = getRequiredIntProperty(root, "taskId", response);
   if (taskId == -1)
   {
     return;

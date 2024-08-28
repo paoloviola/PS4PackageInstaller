@@ -4,10 +4,27 @@
 #include <libc.h>
 #include <sysutil.h>
 
-const char* getRequestPropertyString(const json_t* root, const char* key, HttpResponse* response)
+const char* getOptionalStringProperty(const json_t* root, const char* key, const char* defaultValue)
 {
   const char* value = json_getPropertyValue(root, key);
-  if (value == NULL)
+  return value == NULL ? defaultValue : value;
+}
+
+int64_t getOptionalIntProperty(const json_t* root, const char* key, int64_t defaultValue)
+{
+  const json_t* property = json_getProperty(root, key);
+  if (property == NULL)
+  {
+    return defaultValue;
+  }
+
+  return json_getInteger(property);
+}
+
+const char* getRequiredStringProperty(const json_t* root, const char* key, HttpResponse* response)
+{
+  const char* value = getOptionalStringProperty(root, key, NULL);
+  if (value == NULL && response != NULL)
   {
     printf_debug("Wrong request. \"%s\" field was not found!\n", key);
     httpResponseSetCode(response, "400 Bad Request");
@@ -19,10 +36,10 @@ const char* getRequestPropertyString(const json_t* root, const char* key, HttpRe
   return value;
 }
 
-int getRequestPropertyInt(const json_t* root, const char* key, HttpResponse* response)
+int64_t getRequiredIntProperty(const json_t* root, const char* key, HttpResponse* response)
 {
-  const json_t* property = json_getProperty(root, key);
-  if (property == NULL)
+  const int64_t value = getOptionalIntProperty(root, key, -1);
+  if (value == -1 && response != NULL)
   {
     printf_debug("Wrong request. \"%s\" field was not found!\n", key);
     httpResponseSetCode(response, "400 Bad Request");
@@ -30,8 +47,6 @@ int getRequestPropertyInt(const json_t* root, const char* key, HttpResponse* res
     char content[256] = { 0 };
     snprintf(content, sizeof(content), "{\"error\":\"Wrong request. \\\"%s\\\" field was not found!\"}", key);
     httpResponsePrintContent(response, content);
-    return -1;
   }
-  return json_getInteger(property);
+  return value;
 }
-

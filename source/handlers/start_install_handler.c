@@ -21,18 +21,23 @@ void svcHttpStartInstallHandler(HttpRequest* request, HttpResponse* response)
     return;
   }
 
-  const char* contentId = getRequestPropertyString(root, "contentId", response);
-  const char* contentUrl = getRequestPropertyString(root, "contentUrl", response);
-  const char* contentName = getRequestPropertyString(root, "contentName", response);
-  const char* packageType = getRequestPropertyString(root, "packageType", response);
-  const char* packageSubType = getRequestPropertyString(root, "packageSubType", response);
-  int packageSize = getRequestPropertyInt(root, "packageSize", response);
+  // Required values
+  const char* contentId = getRequiredStringProperty(root, "contentId", response);
+  const char* contentUrl = getRequiredStringProperty(root, "contentUrl", response);
 
-  if (contentId == NULL || contentUrl == NULL || contentName == NULL 
-    || packageType == NULL || packageSubType == NULL || packageSize == -1)
+  if (contentId == NULL || contentUrl == NULL)
   {
     return;
   }
+
+  // Optional values
+  const char* contentName = getOptionalStringProperty(root, "contentName", "");
+  const char* iconPath = getOptionalStringProperty(root, "iconPath", "");
+  const char* playgoScenarioId = getOptionalStringProperty(root, "playgoScenarioId", "0");
+  int64_t option = getOptionalIntProperty(root, "option", 0);
+  const char* packageType = getOptionalStringProperty(root, "packageType", "");
+  const char* packageSubType = getOptionalStringProperty(root, "packageSubType", "");
+  int64_t packageSize = getOptionalIntProperty(root, "packageSize", 0);
 
   printf_debug("Downloading %s with id %s from %s...\n", contentName, contentId, contentUrl);
 
@@ -44,9 +49,9 @@ void svcHttpStartInstallHandler(HttpRequest* request, HttpResponse* response)
   params.id = contentId;
   params.contentUrl = contentUrl;
   params.contentName = contentName;
-  params.iconPath = "";
-  params.playgoScenarioId = "0";
-  params.option = SCE_BGFT_TASK_OPT_NONE;
+  params.iconPath = iconPath;
+  params.playgoScenarioId = playgoScenarioId;
+  params.option = option;
   params.packageType = packageType;
   params.packageSubType = packageSubType;
   params.packageSize = packageSize;
